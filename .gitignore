@@ -1,0 +1,4 @@
+src/gsheetsconnection/client_secrets.json
+src/syncfunctions/client_secrets.json
+client_secrets.json
+token_sheets_v4.pickle
