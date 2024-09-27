@@ -32,4 +32,6 @@ Many businesses use Google Sheets for collaborative data management and database
 
 3. Then you are good to go with other few changes that any developer could understand looking at code. :)
 
+
+BTW this is google sheets I used and referring to -> https://docs.google.com/spreadsheets/d/1zArOpvdBmUUfxWuOpF4VhuRMFCUPKqUHgeMoKBTkfrk/edit?gid=1586090159#gid=1586090159
 Good Luck!!~!
