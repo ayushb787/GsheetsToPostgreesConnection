@@ -34,29 +34,19 @@ def sync_all():
         sheets_ids = set(sheets_df.index.tolist()) if not sheets_df.empty else set()
         postgres_ids = set(postgres_df.index.tolist()) if not postgres_df.empty else set()
 
-        # Step 2: Insertions and Updates
-        # Compare and sync updates or new records from Google Sheets to PostgreSQL
-        for idx in sheets_ids:
+        # Step 2: Handle Insertions and Updates from Google Sheets to PostgreSQL
+        common_ids = sheets_ids & postgres_ids
+        sheets_only_ids = sheets_ids - postgres_ids
+        postgres_only_ids = postgres_ids - sheets_ids
+
+        for idx in common_ids:
             sheets_row = sheets_df.loc[idx]
-            if idx in postgres_ids:
-                postgres_row = postgres_df.loc[idx]
-                if sheets_row.to_dict() != postgres_row.to_dict():
-                    # If the data differs, update the PostgreSQL record
-                    record = DataRecord(
-                        id=idx,
-                        first_name=sheets_row['first_name'],
-                        last_name=sheets_row['last_name'],
-                        status=sheets_row['status'],
-                        region=sheets_row['region'],
-                        sales_rep=sheets_row['sales_rep'],
-                        follow_up=sheets_row['follow_up'],
-                        notes=sheets_row['notes'],
-                        last_updated=sheets_row['last_updated']
-                    )
-                    upsert_postgres_record(record)
-                    logger.info(f"Upserted record ID {record.id} in PostgreSQL.")
-            else:
-                # If the record is in Google Sheets but not in PostgreSQL, insert it
+            postgres_row = postgres_df.loc[idx]
+
+            # print(sheets_row['last_updated'])
+            # print(postgres_row['last_updated'])
+            if sheets_row['last_updated'] > postgres_row['last_updated']:
+                # Sheets has newer data; update PostgreSQL
                 record = DataRecord(
                     id=idx,
                     first_name=sheets_row['first_name'],
@@ -69,45 +59,10 @@ def sync_all():
                     last_updated=sheets_row['last_updated']
                 )
                 upsert_postgres_record(record)
-                logger.info(f"Inserted new record ID {record.id} into PostgreSQL.")
+                logger.info(f"Upserted record ID {record.id} in PostgreSQL from Sheets.")
 
-        # Re-fetch updated data
-        sheets_df_updated = fetch_sheets_data()
-        postgres_df_updated = fetch_postgres_data()
-
-        logger.info("Re-fetched updated data from Google Sheets and PostgreSQL after insertions/updates.")
-
-        # Ensure 'id' is the key
-        if not sheets_df_updated.empty:
-            sheets_df_updated.set_index('id', inplace=True)
-        if not postgres_df_updated.empty:
-            postgres_df_updated.set_index('id', inplace=True)
-
-        # Sync updates or new records from PostgreSQL to Google Sheets
-        sheets_ids = set(sheets_df_updated.index.tolist()) if not sheets_df_updated.empty else set()
-        postgres_ids = set(postgres_df_updated.index.tolist()) if not postgres_df_updated.empty else set()
-
-        for idx in postgres_ids:
-            postgres_row = postgres_df_updated.loc[idx]
-            if idx in sheets_ids:
-                sheets_row = sheets_df_updated.loc[idx]
-                if postgres_row.to_dict() != sheets_row.to_dict():
-                    # If the data differs, update the Google Sheets row
-                    record = DataRecord(
-                        id=idx,
-                        first_name=postgres_row['first_name'],
-                        last_name=postgres_row['last_name'],
-                        status=postgres_row['status'],
-                        region=postgres_row['region'],
-                        sales_rep=postgres_row['sales_rep'],
-                        follow_up=postgres_row['follow_up'],
-                        notes=postgres_row['notes'],
-                        last_updated=postgres_row['last_updated']
-                    )
-                    update_row_in_sheets(record)
-                    logger.info(f"Updated record ID {record.id} in Google Sheets.")
-            else:
-                # If the record is in PostgreSQL but not in Google Sheets, add it
+            elif postgres_row['last_updated'] > sheets_row['last_updated']:
+                # PostgreSQL has newer data; update Google Sheets
                 record = DataRecord(
                     id=idx,
                     first_name=postgres_row['first_name'],
@@ -119,8 +74,42 @@ def sync_all():
                     notes=postgres_row['notes'],
                     last_updated=postgres_row['last_updated']
                 )
-                add_row_to_sheets(record)
-                logger.info(f"Added record ID {record.id} to Google Sheets.")
+                update_row_in_sheets(record)
+                logger.info(f"Updated record ID {record.id} in Google Sheets from PostgreSQL.")
+
+        # Handle new records from Google Sheets
+        for idx in sheets_only_ids:
+            sheets_row = sheets_df.loc[idx]
+            record = DataRecord(
+                id=idx,
+                first_name=sheets_row['first_name'],
+                last_name=sheets_row['last_name'],
+                status=sheets_row['status'],
+                region=sheets_row['region'],
+                sales_rep=sheets_row['sales_rep'],
+                follow_up=sheets_row['follow_up'],
+                notes=sheets_row['notes'],
+                last_updated=sheets_row['last_updated']
+            )
+            upsert_postgres_record(record)
+            logger.info(f"Inserted new record ID {record.id} into PostgreSQL from Sheets.")
+
+        # Handle new records from PostgreSQL
+        for idx in postgres_only_ids:
+            postgres_row = postgres_df.loc[idx]
+            record = DataRecord(
+                id=idx,
+                first_name=postgres_row['first_name'],
+                last_name=postgres_row['last_name'],
+                status=postgres_row['status'],
+                region=postgres_row['region'],
+                sales_rep=postgres_row['sales_rep'],
+                follow_up=postgres_row['follow_up'],
+                notes=postgres_row['notes'],
+                last_updated=postgres_row['last_updated']
+            )
+            add_row_to_sheets(record)
+            logger.info(f"Added new record ID {record.id} to Google Sheets from PostgreSQL.")
 
         # Step 3: Re-fetch Data After Insertions/Updates
         sheets_df_updated = fetch_sheets_data()

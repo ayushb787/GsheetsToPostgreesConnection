@@ -3,7 +3,7 @@ from starlette.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 # from src.all_routes import router
 from src.syncfunctions.sync import start_background_sync
-# from dotenv import load_dotenv
+from src.routes.all_routes import router
 import os
 
 from uvicorn import run
@@ -21,6 +21,8 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"]
 )
+app.include_router(router)
+
 
 @app.on_event("startup")
 async def startup_event():

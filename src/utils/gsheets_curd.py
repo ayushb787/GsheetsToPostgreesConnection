@@ -137,10 +137,10 @@ def add_row_to_sheets(record: DataRecord):
 
 
 def update_row_in_sheets(record: DataRecord):
-    if not all([record.id, record.first_name, record.last_name, record.status,
-                record.region, record.sales_rep, record.follow_up, record.notes, record.last_updated]):
-        logger.error("Incomplete DataRecord provided.")
-        return False
+    # if not all([record.id, record.first_name, record.last_name, record.status,
+    #             record.region, record.sales_rep, record.follow_up, record.notes, record.last_updated]):
+    #     logger.error("Incomplete DataRecord provided.")
+    #     return False
 
     try:
         df = fetch_sheets_data()
@@ -177,7 +177,7 @@ def delete_row_from_sheets(record_id: int):
         df = fetch_sheets_data()
         row_indices = df.index[df['id'] == record_id].tolist()
         if not row_indices:
-            print(f"Record with ID {record_id} not found in Sheets.")
+            logger.error(f"Record with ID {record_id} not found in Sheets.")
             return False
         row_number = row_indices[0] + 2
         sheets = authenticate_sheets()
