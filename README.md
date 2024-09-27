@@ -22,3 +22,14 @@ Many businesses use Google Sheets for collaborative data management and database
 - Ensure the solution can handle large datasets and high-frequency updates without performance degradation.
 - Optimize for scalability and efficiency.
 
+
+### Steps to deploy Solution
+1. Add Code.gs to script in google sheets
+   - Go to Extensions -> Apps Script -> Paste code in Code.gs -> Press ctrl+s to save file and close the tab
+   - You will notice for any change you do on sheet you will se sheets last_updated time getting updated
+
+2. Go to Google Cloud Console get one project created and generate new credentials and download client token json file and paste it in project directory
+
+3. Then you are good to go with other few changes that any developer could understand looking at code. :)
+
+Good Luck!!~!
