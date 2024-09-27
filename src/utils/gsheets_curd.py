@@ -1,10 +1,13 @@
+"""
+Author: Ayush Bhandari
+Email: ayushbhandariofficial@gmail.com
+"""
 import os
 from datetime import datetime
 import pandas as pd
 from googleapiclient.errors import HttpError
 from src.datamodels.model import DataRecord
 from src.gsheetsconnection.oauth import authenticate_sheets
-from src.postgresconnection.postgres_connection import get_postgres_engine
 from loguru import logger
 
 SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")

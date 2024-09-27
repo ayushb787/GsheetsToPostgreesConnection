@@ -1,3 +1,7 @@
+"""
+Author: Ayush Bhandari
+Email: ayushbhandariofficial@gmail.com
+"""
 from fastapi import FastAPI
 from starlette.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware

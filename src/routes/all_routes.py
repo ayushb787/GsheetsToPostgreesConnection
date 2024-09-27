@@ -1,3 +1,7 @@
+"""
+Author: Ayush Bhandari
+Email: ayushbhandariofficial@gmail.com
+"""
 from fastapi import APIRouter
 
 from src.routes.postgres_curd_endpoints import router as postgres_curd

@@ -1,3 +1,7 @@
+"""
+Author: Ayush Bhandari
+Email: ayushbhandariofficial@gmail.com
+"""
 from sqlalchemy import create_engine
 import os
 
@@ -12,3 +16,27 @@ def get_postgres_engine():
     conn_string = f"postgresql://{user}:{password}@{host}:{port}/{database}"
     engine = create_engine(conn_string)
     return engine
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

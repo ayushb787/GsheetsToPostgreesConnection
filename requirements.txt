@@ -8,6 +8,5 @@ google-auth-oauthlib
 google-api-python-client
 gspread~=6.1.2
 aiofiles
-
 loguru~=0.7.2
 starlette~=0.38.6

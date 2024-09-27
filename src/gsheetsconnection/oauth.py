@@ -1,3 +1,7 @@
+"""
+Author: Ayush Bhandari
+Email: ayushbhandariofficial@gmail.com
+"""
 from datetime import datetime
 import pickle
 import os

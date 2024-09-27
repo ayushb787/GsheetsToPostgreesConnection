@@ -1,3 +1,7 @@
+"""
+Author: Ayush Bhandari
+Email: ayushbhandariofficial@gmail.com
+"""
 from sqlalchemy import create_engine, Table, Column, Integer, String, Float, DateTime, MetaData
 from sqlalchemy.orm import sessionmaker
 from src.postgresconnection.postgres_connection import get_postgres_engine

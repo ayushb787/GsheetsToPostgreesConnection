@@ -1,7 +1,8 @@
+"""
+Author: Ayush Bhandari
+Email: ayushbhandariofficial@gmail.com
+"""
 import asyncio
-from datetime import datetime
-
-import pandas as pd
 from loguru import logger
 from src.utils.gsheets_curd import fetch_sheets_data, add_row_to_sheets, update_row_in_sheets, \
     delete_row_from_sheets

@@ -1,3 +1,7 @@
+"""
+Author: Ayush Bhandari
+Email: ayushbhandariofficial@gmail.com
+"""
 from fastapi import APIRouter, HTTPException
 from src.datamodels.postgres_curd_model import ItemCreate, ItemUpdate, Item
 from src.utils.postgres_curd import fetch_postgres_data, insert_postgres_record, update_postgres_record, \
@@ -69,3 +73,5 @@ def delete_record(record_id: int):
     except Exception as e:
         logger.error(f"Error deleting record: {e}")
         raise HTTPException(status_code=500, detail="Error deleting record")
+
+
